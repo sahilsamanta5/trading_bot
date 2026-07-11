@@ -1,0 +1,2 @@
+2026-07-11 14:14:19,510 | INFO | market_order | MARKET ORDER | Symbol=BTCUSDT Side=BUY Quantity=0.001
+2026-07-11 14:14:19,668 | INFO | market_order | MARKET ORDER RESPONSE | OrderID=None Status=None ExecutedQty=None

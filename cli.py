@@ -2,9 +2,7 @@
 
 import argparse
 
-from dotenv import load_dotenv
-
-from bot.logging_config import setup_logging, trading_logger
+from bot.logging_config import trading_logger
 from bot.orders import OrderService
 from bot.validators import (
     validate_symbol,
@@ -16,9 +14,6 @@ from bot.validators import (
 
 
 def main():
-    load_dotenv()
-    setup_logging()
-
     parser = argparse.ArgumentParser(
         description="Binance Futures Testnet Trading Bot"
     )
@@ -32,33 +27,30 @@ def main():
     parser.add_argument(
         "--side",
         required=True,
-        choices=["BUY", "SELL"],
-        help="Order side",
+        help="BUY or SELL",
     )
 
     parser.add_argument(
         "--type",
         required=True,
-        choices=["MARKET", "LIMIT"],
-        help="Order type",
+        help="MARKET or LIMIT",
     )
 
     parser.add_argument(
         "--quantity",
         required=True,
-        type=float,
         help="Order quantity",
     )
 
     parser.add_argument(
         "--price",
-        type=float,
         help="Required for LIMIT orders",
     )
 
     args = parser.parse_args()
 
     try:
+        # Validate user input
         symbol = validate_symbol(args.symbol)
         side = validate_side(args.side)
         order_type = validate_order_type(args.type)
@@ -72,8 +64,8 @@ def main():
                 "Unable to connect to Binance Futures Testnet."
             )
 
-        # -------- ORDER REQUEST --------
-        print("\nOrder Request Sent as follows:")
+        # Print request summary
+        print("\n========== ORDER REQUEST ==========")
         print(f"Symbol   : {symbol}")
         print(f"Side     : {side}")
         print(f"Type     : {order_type}")
@@ -81,6 +73,8 @@ def main():
 
         if order_type == "LIMIT":
             print(f"Price    : {price}")
+
+        print("===================================")
 
         trading_logger.info(
             "CLI Request | Symbol=%s Side=%s Type=%s Quantity=%s Price=%s",
@@ -91,7 +85,7 @@ def main():
             price,
         )
 
-        # Placing Order
+        # Place order
         if order_type == "MARKET":
             response = service.place_market_order(
                 symbol=symbol,
@@ -116,10 +110,9 @@ def main():
             result["avg_price"],
         )
 
-        # -------- SUCCESS --------
-        print("Order placed successfully!\n")
+        print("\nOrder placed successfully!")
 
-        print("========== ORDER RESPONSE ==========")
+        print("\n========== ORDER RESPONSE ==========")
         print(f"Order ID      : {result['order_id']}")
         print(f"Status        : {result['status']}")
         print(f"Executed Qty  : {result['executed_qty']}")

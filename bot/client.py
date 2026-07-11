@@ -1,13 +1,10 @@
 # bot/client.py
 
-import logging
-
 from binance.client import Client
 from binance.exceptions import BinanceAPIException, BinanceRequestException
 
 from bot.config import API_KEY, API_SECRET, BASE_URL
-
-logger = logging.getLogger(__name__)
+from bot.logging_config import trading_logger
 
 
 class BinanceClient:
@@ -26,7 +23,10 @@ class BinanceClient:
         self.client = Client(API_KEY, API_SECRET)
         self.client.FUTURES_URL = BASE_URL
 
-        logger.info("Connected to Binance Futures: %s", BASE_URL)
+        trading_logger.info(
+            "Connected to Binance Futures Testnet (%s)",
+            BASE_URL,
+        )
 
     def place_order(self, **order_data):
         """
@@ -38,45 +38,41 @@ class BinanceClient:
         Returns:
             dict: Binance API response.
         """
-        logger.info("Order Request: %s", order_data)
+
+        trading_logger.info("API Request: %s", order_data)
 
         try:
             response = self.client.futures_create_order(**order_data)
 
-            logger.info("Order Response: %s", response)
+            trading_logger.info("API Response: %s", response)
 
             return response
 
         except BinanceAPIException as e:
-            logger.error("Binance API Error: %s", e)
+            trading_logger.error("Binance API Error: %s", e)
             raise
 
         except BinanceRequestException as e:
-            logger.error("Binance Request Error: %s", e)
+            trading_logger.error("Binance Request Error: %s", e)
             raise
 
-        except Exception as e:
-            logger.exception("Unexpected Error: %s", e)
+        except Exception:
+            trading_logger.exception("Unexpected error while placing order.")
             raise
 
     def get_server_time(self):
-        """
-        Get Binance Futures server time.
-
-        Returns:
-            dict: Server time.
-        """
+        """Return Binance Futures server time."""
         return self.client.futures_time()
 
     def get_mark_price(self, symbol):
         """
-        Get current mark price for a symbol.
+        Return current mark price.
 
         Args:
-            symbol (str): Trading pair (e.g., BTCUSDT).
+            symbol (str): Trading pair (e.g. BTCUSDT)
 
         Returns:
-            dict: Mark price information.
+            dict
         """
         return self.client.futures_mark_price(symbol=symbol)
 
@@ -85,17 +81,24 @@ class BinanceClient:
         Check Binance Futures Testnet connectivity.
 
         Returns:
-            bool: True if reachable, otherwise False.
+            bool
         """
+
         try:
             self.client.futures_ping()
-            logger.info("Binance Futures Testnet is reachable.")
+
+            trading_logger.info(
+                "Successfully connected to Binance Futures Testnet."
+            )
+
             return True
 
         except BinanceRequestException as e:
-            logger.error("Ping failed: %s", e)
+            trading_logger.error("Ping failed: %s", e)
             return False
 
-        except Exception as e:
-            logger.exception("Unexpected ping error: %s", e)
+        except Exception:
+            trading_logger.exception(
+                "Unexpected error while connecting to Binance."
+            )
             return False

@@ -40,10 +40,21 @@ class OrderService:
             side=side.upper(),
             type="MARKET",
             quantity=quantity,
+            newOrderRespType="RESULT",
         )
 
-        market_logger.info("MARKET ORDER RESPONSE: %s", response)
-        trading_logger.info("MARKET ORDER COMPLETED")
+        market_logger.info(
+            "MARKET ORDER RESPONSE | OrderID=%s Status=%s ExecutedQty=%s",
+            response.get("orderId"),
+            response.get("status"),
+            response.get("executedQty"),
+        )
+
+        trading_logger.info(
+            "MARKET ORDER COMPLETED | OrderID=%s Status=%s",
+            response.get("orderId"),
+            response.get("status"),
+        )
 
         return response
 
@@ -76,10 +87,21 @@ class OrderService:
             quantity=quantity,
             price=price,
             timeInForce=DEFAULT_TIME_IN_FORCE,
+            newOrderRespType="RESULT",
         )
 
-        limit_logger.info("LIMIT ORDER RESPONSE: %s", response)
-        trading_logger.info("LIMIT ORDER COMPLETED")
+        limit_logger.info(
+            "LIMIT ORDER RESPONSE | OrderID=%s Status=%s ExecutedQty=%s",
+            response.get("orderId"),
+            response.get("status"),
+            response.get("executedQty"),
+        )
+
+        trading_logger.info(
+            "LIMIT ORDER COMPLETED | OrderID=%s Status=%s",
+            response.get("orderId"),
+            response.get("status"),
+        )
 
         return response
 
@@ -99,10 +121,10 @@ class OrderService:
             "order_id": response.get("orderId"),
             "symbol": response.get("symbol"),
             "side": response.get("side"),
-            "status": response.get("status"),
             "type": response.get("type"),
-            "executed_qty": response.get("executedQty"),
+            "status": response.get("status"),
             "orig_qty": response.get("origQty"),
+            "executed_qty": response.get("executedQty"),
             "price": response.get("price"),
-            "avg_price": response.get("avgPrice", "N/A"),
+            "avg_price": response.get("avgPrice") or "N/A",
         }

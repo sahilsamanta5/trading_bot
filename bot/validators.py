@@ -55,7 +55,9 @@ def validate_quantity(quantity):
     try:
         quantity = float(quantity)
     except (TypeError, ValueError):
-        raise ValueError("Quantity must be a valid number.")
+        raise ValueError(
+            "Quantity must be a valid number."
+        ) from None
 
     if quantity <= 0:
         raise ValueError("Quantity must be greater than zero.")
@@ -66,16 +68,27 @@ def validate_quantity(quantity):
 def validate_price(price, order_type):
     """Validate price for LIMIT orders."""
 
-    if order_type == "LIMIT":
-        if price is None:
-            raise ValueError("Price is required for LIMIT orders.")
+    if order_type != "LIMIT":
+        return None
 
-        try:
-            price = float(price)
-        except (TypeError, ValueError):
-            raise ValueError("Price must be a valid number.")
+    if price is None:
+        raise ValueError(
+            "Price is required for LIMIT orders."
+        )
 
-        if price <= 0:
-            raise ValueError("Price must be greater than zero.")
+    if isinstance(price, str):
+        price = price.strip()
+
+    try:
+        price = float(price)
+    except (TypeError, ValueError):
+        raise ValueError(
+            "Price must be a valid number."
+        ) from None
+
+    if price <= 0:
+        raise ValueError(
+            "Price must be greater than zero."
+        )
 
     return price
