@@ -137,7 +137,7 @@ python cli.py \
 Example:
 
 ```bash
-python cli.py --symbol BTCUSDT --side BUY --type LIMIT --quantity 0.001 --price 100000
+python cli.py --symbol BTCUSDT --side BUY --type LIMIT --quantity 0.01 --price 10000
 ```
 
 ---
