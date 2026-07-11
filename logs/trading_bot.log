@@ -1,7 +1,0 @@
-2026-07-11 14:14:18,651 | INFO | trading_bot | Connected to Binance Futures Testnet (https://testnet.binancefuture.com)
-2026-07-11 14:14:19,508 | INFO | trading_bot | Successfully connected to Binance Futures Testnet.
-2026-07-11 14:14:19,509 | INFO | trading_bot | CLI Request | Symbol=BTCUSDT Side=BUY Type=MARKET Quantity=0.001 Price=None
-2026-07-11 14:14:19,510 | INFO | trading_bot | API Request: {'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.001, 'newOrderRespType': 'RESULT'}
-2026-07-11 14:14:19,667 | INFO | trading_bot | API Response: {}
-2026-07-11 14:14:19,669 | INFO | trading_bot | MARKET ORDER COMPLETED | OrderID=None Status=None
-2026-07-11 14:14:19,669 | INFO | trading_bot | CLI Response | OrderID=None Status=None ExecutedQty=None AvgPrice=N/A
